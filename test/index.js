@@ -1,5 +1,6 @@
 var expect = require('chai').expect,
-  MiddlewareHandler = require('../');
+  MiddlewareHandler = require('../'),
+  compose = MiddlewareHandler.compose;
 
 
 describe('MiddlewareHandler', function() {
@@ -32,13 +33,12 @@ describe('MiddlewareHandler', function() {
   describe('#handle', function() {
     it('should accept variable arguments', function(done) {
       var handler = new MiddlewareHandler(),
-        argv = ['foo', 'bar', 'baz'],
-        middleware = function(a, b, c, next) {
-          expect([a, b, c]).to.eql(argv);
-          next();
-        };
+        argv = ['foo', 'bar', 'baz'];
 
-      handler.use(middleware);
+      handler.use(function(a, b, c, next) {
+        expect([a, b, c]).to.eql(argv);
+        next();
+      });
       handler.handle(argv, done);
     });
 
@@ -56,6 +56,92 @@ describe('MiddlewareHandler', function() {
       });
       handler.handle([arg], done);
     });
+
+    it('should call the callback with an error as the first argument', function(done) {
+      var handler = new MiddlewareHandler(),
+        err = new Error();
+
+      handler.use(function(next) {
+        next(err);
+      });
+      handler.handle(function(_err) {
+        expect(_err).to.eql(err);
+        done();
+      });
+    });
+
+    it('should skip subsequence middleware calls when error', function(done) {
+      var handler = new MiddlewareHandler();
+
+      handler.use(function(next) {
+        next(new Error());
+      });
+      handler.use(function() {
+        throw new Error('Unexpected call');
+      });
+      handler.handle(function(err) {
+        done();
+      });
+    });
+
+    it('should call middlewares with an error if they accept larger arguments than values', function(done) {
+      var handler = new MiddlewareHandler(),
+        err = new Error(),
+        arg = 'foo';
+
+      handler.use(function(_err, v, next) {
+        expect(_err).to.not.exist;
+        expect(v).to.eql(arg);
+        next();
+      });
+      handler.use(function(v, next) {
+        next(err);
+      });
+      handler.use(function(_err, v, next) {
+        expect(_err).to.eql(err);
+        next(err);
+      });
+      handler.handle([arg], function(err) {
+        done();
+      });
+    });
   });
 
+  describe('#compose', function() {
+    it('should create a function with the provided callback', function(done) {
+      var handler = new MiddlewareHandler();
+
+      handler.compose(done)();
+    });
+
+    it('should create a function accepts variable arguments', function(done) {
+      var handler = new MiddlewareHandler(),
+        args = ['foo', 'bar', 'baz'];
+
+      handler.use(function(a, b, c, next) {
+        expect([a, b, c]).to.eql(args);
+        next();
+      });
+
+      handler.compose(done).apply(null, args);
+    });
+  });
+
+  describe('compose', function() {
+    it('should create a function with provided middlewares', function(done) {
+      var value = 'foo',
+        middleware = function(v, next) {
+          expect(v).to.eql(value);
+          next();
+        },
+        fn;
+
+      fn = compose(middleware, middleware, function(v) {
+        expect(v).to.eql(value);
+        done();
+      });
+      fn(value);
+    });
+  });
 });
+
