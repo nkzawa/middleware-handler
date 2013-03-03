@@ -1,7 +1,7 @@
 {
   "name": "middleware-handler",
-  "version": "0.1.0",
-  "description": "Manager for express/connect-like middlewares",
+  "version": "0.1.1",
+  "description": "Manager for custom middlewares",
   "author": "Naoyuki Kanezawa <naoyuki.kanezawa@gmail.com>",
   "keywords": [
     "middleware", "express", "connect"
