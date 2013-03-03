@@ -108,3 +108,5 @@ var fn = MiddlewareHandler.compose(middleware, function(a, b) {
 fn('foo', 'bar');
 ```
 
+### License ###
+MIT
