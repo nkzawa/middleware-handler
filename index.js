@@ -31,6 +31,7 @@ MiddlewareHandler.prototype.handle = function(args, callback) {
     callback = args;
     args = [];
   }
+  args = args || [];
 
   // Count of arguments a middleware accepts
   length = args.length + 1;
@@ -57,7 +58,11 @@ MiddlewareHandler.prototype.handle = function(args, callback) {
       return;
     }
 
-    middleware.apply(null, _args);
+    try {
+      middleware.apply(null, _args);
+    } catch (e) {
+      next(e);
+    }
   }
 
   next();

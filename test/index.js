@@ -105,6 +105,19 @@ describe('MiddlewareHandler', function() {
         done();
       });
     });
+
+    it('should catch thrown errors', function(done) {
+      var handler = new MiddlewareHandler(),
+        err = new Error();
+
+      handler.use(function(next) {
+        throw err;
+      });
+      handler.handle(function(_err) {
+        expect(_err).to.eql(err);
+        done();
+      });
+    });
   });
 
   describe('#compose', function() {
