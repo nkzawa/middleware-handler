@@ -6,7 +6,7 @@ MiddlewareHandler manages custom middlewares in the same way as how Express/Conn
 ```js
 var MiddlewareHandler = require('middleware-handler');
 
-handler = new MiddlewareHandler();
+var handler = new MiddlewareHandler();
 handler.use(function(a, b, next()) {
   console.log(a, b); // foo bar
   next();
@@ -23,7 +23,7 @@ handler.handle(['foo', 'bar']);
 ```middleware``` accepts variable arguments and a callback.
 
 ```js
-handler = new MiddlewareHandler();
+var handler = new MiddlewareHandler();
 handler.use(function(arg, next) {
   var err;
   // do some stuff
@@ -31,23 +31,11 @@ handler.use(function(arg, next) {
 });
 ```
 
-#### #clear() ####
-Clear all middlewares from the stack.
-
-```js
-handler = new MiddlewareHandler();
-handler.use(function() {});
-console.log(handler.stack.length); // 1
-
-handler.clear();
-console.log(handler.stack.length); // 0
-```
-
 #### #handle([args], [callback]) ####
 Invoke middlewares.
 
 ```js
-handler = new MiddlewareHandler();
+var handler = new MiddlewareHandler();
 handler.use(function(a, b, next) {
   console.log(a, b); // foo bar
   next();
@@ -61,7 +49,7 @@ handler.handle(['foo', 'bar'], function(err) {
 Create a function that invokes middlewares.
 
 ```js
-handler = new MiddlewareHandler();
+var handler = new MiddlewareHandler();
 handler.use(function(a, b, next) {
   console.log(a, b); // foo bar
   next();
@@ -71,6 +59,18 @@ var fn = handler.compose(function(err) {
     // after calling all middlewares
   });
 fn('foo', 'bar');
+```
+
+#### #clear() ####
+Clear all middlewares from the stack.
+
+```js
+var handler = new MiddlewareHandler();
+handler.use(function() {});
+console.log(handler.stack.length); // 1
+
+handler.clear();
+console.log(handler.stack.length); // 0
 ```
 
 #### compose(middlewares...) ####
