@@ -15,7 +15,27 @@ handler.handle(['foo', 'bar']);
 ```
 
 ### Installation ###
-    $npm install middleware-handler
+    $ npm install middleware-handler
+
+### Example ###
+#### Integration with Socket.io ####
+Parsing cookie from handshake's data with the authorization.
+
+```js
+var cookieParser = require('express').cookieParser('secret');
+var handler = new MiddlewareHandler();
+handler.use(function(handshakeData, next) {
+  cookieParser(handshakeData, {}, next);
+});
+
+var io = require('socket.io').listen(8080);
+io.set('authorization', function(handshakeData, callback) {
+  handler.handle([handshakeData], function(err) {
+    console.log(handshakeData.cookies);
+    callback(err, !err);
+  });
+});
+```
 
 ### Documentation ###
 
