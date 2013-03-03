@@ -1,4 +1,4 @@
-## MiddlewareHandler ##
+# MiddlewareHandler
 [![Build Status](https://travis-ci.org/nkzawa/middleware-handler.png?branch=master)](https://travis-ci.org/nkzawa/middleware-handler)
 
 MiddlewareHandler manages custom middlewares in the same way as how Express/Connect does.
@@ -14,11 +14,12 @@ handler.use(function(a, b, next()) {
 handler.handle(['foo', 'bar']);
 ```
 
-### Installation ###
+## Installation
     $ npm install middleware-handler
 
-### Example ###
-#### Integration with Socket.io ####
+## Example
+
+### Integration with Socket.io
 Parsing cookie from handshake's data with the authorization.
 
 ```js
@@ -37,9 +38,9 @@ io.set('authorization', function(handshakeData, callback) {
 });
 ```
 
-### Documentation ###
+## Documentation
 
-#### #use(middleware) ####
+### #use(middleware)
 ```middleware``` accepts variable arguments and a callback.
 
 ```js
@@ -51,7 +52,7 @@ handler.use(function(arg, next) {
 });
 ```
 
-#### #handle([args], [callback]) ####
+### #handle([args], [callback])
 Invoke middlewares.
 
 ```js
@@ -65,7 +66,7 @@ handler.handle(['foo', 'bar'], function(err) {
 });
 ```
 
-#### #compose([callback]) ####
+### #compose([callback])
 Create a function that invokes middlewares.
 
 ```js
@@ -81,7 +82,7 @@ var fn = handler.compose(function(err) {
 fn('foo', 'bar');
 ```
 
-#### #clear() ####
+### #clear()
 Clear all middlewares from the stack.
 
 ```js
@@ -93,7 +94,7 @@ handler.clear();
 console.log(handler.stack.length); // 0
 ```
 
-#### compose(middlewares...) ####
+### compose(middlewares...)
 Create a function that invokes the passed middlewares.
 
 ```js
@@ -108,5 +109,6 @@ var fn = MiddlewareHandler.compose(middleware, function(a, b) {
 fn('foo', 'bar');
 ```
 
-### License ###
+## License
 MIT
+
