@@ -1,10 +1,10 @@
 {
   "name": "middleware-handler",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Manager for custom middlewares",
   "author": "Naoyuki Kanezawa <naoyuki.kanezawa@gmail.com>",
   "keywords": [
-    "middleware", "express", "connect"
+    "middleware", "express", "connect", "handler", "manager"
   ],
   "repository": {
     "type": "git",
