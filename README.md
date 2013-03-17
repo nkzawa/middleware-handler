@@ -7,7 +7,7 @@ MiddlewareHandler manages custom middlewares in the same way as how Express/Conn
 var MiddlewareHandler = require('middleware-handler');
 
 var handler = new MiddlewareHandler();
-handler.use(function(a, b, next()) {
+handler.use(function(a, b, next) {
   console.log(a, b); // foo bar
   next();
 });
@@ -26,6 +26,7 @@ Parsing cookie from handshake's data with the authorization.
 var cookieParser = require('express').cookieParser('secret');
 var handler = new MiddlewareHandler();
 handler.use(function(handshakeData, next) {
+  // handshakeData has almost the same attributes with request object.
   cookieParser(handshakeData, {}, next);
 });
 
@@ -48,17 +49,27 @@ var handler = new MiddlewareHandler();
 handler.use(function(arg, next) {
   var err;
   // do some stuff
-  next(err); // optionally accepts an error object
+  next(err);  // optionally accepts an error object
+});
+```
+
+```js
+handler.use(function(arg, next) {
+  next(null, 'foo'); // arguments will be passed to a next middleware
+});
+handler.use(function(arg, next) {
+  console.log(arg);  // 'foo'
+  next();
 });
 ```
 
 ### #handle([args], [callback])
-Invoke middlewares.
+Invokes middlewares.
 
 ```js
 var handler = new MiddlewareHandler();
 handler.use(function(a, b, next) {
-  console.log(a, b); // foo bar
+  console.log(a, b);  // 'foo bar'
   next();
 });
 handler.handle(['foo', 'bar'], function(err) {
@@ -67,12 +78,12 @@ handler.handle(['foo', 'bar'], function(err) {
 ```
 
 ### #compose([callback])
-Create a function that invokes middlewares.
+Creates a function which invokes middlewares.
 
 ```js
 var handler = new MiddlewareHandler();
 handler.use(function(a, b, next) {
-  console.log(a, b); // foo bar
+  console.log(a, b);  // 'foo bar'
   next();
 });
 
@@ -88,23 +99,23 @@ Clear all middlewares from the stack.
 ```js
 var handler = new MiddlewareHandler();
 handler.use(function() {});
-console.log(handler.stack.length); // 1
+console.log(handler.stack.length);  // 1
 
 handler.clear();
-console.log(handler.stack.length); // 0
+console.log(handler.stack.length);  // 0
 ```
 
 ### compose(middlewares...)
-Create a function that invokes the passed middlewares.
+Creates a function which invokes the passed middlewares.
 
 ```js
 function middleware(a, b, next) {
-  console.log(a, b); // foo bar
+  console.log(a, b);  // 'foo bar'
   next();
 }
 
 var fn = MiddlewareHandler.compose(middleware, function(a, b) {
-    console.log(a, b); // foo bar
+    console.log(a, b);  // 'foo bar'
   });
 fn('foo', 'bar');
 ```

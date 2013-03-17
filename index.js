@@ -4,16 +4,6 @@ function MiddlewareHandler() {
   this.clear();
 }
 
-MiddlewareHandler.compose = function() {
-  var handler = new MiddlewareHandler(),
-    middlewares = slice.call(arguments);
-
-  middlewares.forEach(function(middleware) {
-    handler.use(middleware);
-  });
-  return handler.compose();
-};
-
 MiddlewareHandler.prototype.use = function(middleware) {
   this.stack.push(middleware);
 };
@@ -39,6 +29,12 @@ MiddlewareHandler.prototype.handle = function(args, callback) {
   function next(err) {
     var middleware = _this.stack[index++],
       _args;
+
+    if (arguments.length > 1) {
+      // update args by passed values
+      args = slice.call(arguments, 1);
+      length = args.length + 1;
+    }
 
     if (!middleware) {
       if (callback) {
@@ -78,5 +74,18 @@ MiddlewareHandler.prototype.compose = function(callback) {
   };
 };
 
-module.exports = MiddlewareHandler;
+
+function compose() {
+  var handler = new MiddlewareHandler(),
+    middlewares = slice.call(arguments);
+
+  middlewares.forEach(function(middleware) {
+    handler.use(middleware);
+  });
+  return handler.compose();
+}
+
+
+exports = module.exports = MiddlewareHandler;
+exports.compose = compose;
 

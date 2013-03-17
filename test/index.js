@@ -106,6 +106,19 @@ describe('MiddlewareHandler', function() {
       });
     });
 
+    it('should be able to pass arguments to next a middleware', function(done) {
+      var handler = new MiddlewareHandler();
+
+      handler.use(function(a, b, next) {
+        next(null, a.toUpperCase(), b.toUpperCase());
+      });
+      handler.handle(['foo', 'bar'], function(_err, a, b) {
+        expect(a).to.eql('FOO');
+        expect(b).to.eql('BAR');
+        done();
+      });
+    });
+
     it('should catch thrown errors', function(done) {
       var handler = new MiddlewareHandler(),
         err = new Error();
