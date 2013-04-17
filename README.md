@@ -1,5 +1,6 @@
 # MiddlewareHandler
 [![Build Status](https://travis-ci.org/nkzawa/middleware-handler.png?branch=master)](https://travis-ci.org/nkzawa/middleware-handler)
+[![NPM version](https://badge.fury.io/js/middleware-handler.png)](http://badge.fury.io/js/middleware-handler)
 
 MiddlewareHandler manages custom middlewares in the same way as how Express/Connect does.
 
